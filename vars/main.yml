@@ -1,0 +1,7 @@
+---
+# vars file for ansible-modsecurity-centos7
+
+modsecurity_packages:
+  - mod_security
+  - mod_security_crs
+  - httpd

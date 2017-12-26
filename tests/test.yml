@@ -1,0 +1,5 @@
+---
+- hosts: modsecurity
+  remote_user: root
+  roles:
+    - ansible-modsecurity-centos7

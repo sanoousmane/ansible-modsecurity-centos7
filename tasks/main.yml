@@ -1,0 +1,30 @@
+---
+# tasks file for ansible-modsecurity-centos7
+
+- name: update all packages
+  yum: name=* state=latest
+
+- name: install the 'Development tools' package group
+  yum: name="{{ item }}" state=present
+  with_items: "{{ modsecurity_packages }}"
+  tags: before_reboot
+
+- name: Enable httpd
+  service:
+    name=httpd
+    enabled=yes
+    state=started
+
+- name: Config de mod_security.conf
+  template:
+    src=mod_security.conf.j2
+    dest=/etc/httpd/conf.d/mod_security.conf
+    owner=root
+    mode=0644
+  notify: restart httpd
+
+- name: Autoriser le port qu'utilise le service apache
+  shell: firewall-cmd --add-port=80/tcp --permanent
+
+- name: reload firewall
+  shell: firewall-cmd --reload
